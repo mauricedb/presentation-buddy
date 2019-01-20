@@ -5,10 +5,10 @@ import { Instruction, InstructionHandler } from './instructions';
 import * as instructionHandlers from './instruction-handlers';
 
 export const start = async () => {
-  const editor = window.activeTextEditor;
-  if (!editor) {
-    return;
-  }
+  // const editor = window.activeTextEditor;
+  // if (!editor) {
+  //   return;
+  // }
   if (!workspace.workspaceFolders) {
     return;
   }
