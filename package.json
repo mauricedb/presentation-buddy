@@ -31,14 +31,14 @@
     "test": "yarn run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^8.10.25",
-    "tslint": "^5.8.0",
-    "typescript": "^3.1.4",
-    "vscode": "^1.1.25"
+    "@types/mocha": "2.2.42",
+    "@types/node": "8.10.25",
+    "tslint": "5.8.0",
+    "typescript": "3.1.4",
+    "vscode": "1.1.25"
   },
   "dependencies": {
-    "@types/jsonfile": "^5.0.0",
-    "jsonfile": "^5.0.0"
+    "@types/jsonfile": "5.0.0",
+    "jsonfile": "5.0.0"
   }
 }
