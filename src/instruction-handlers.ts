@@ -1,4 +1,5 @@
-import { commands, Uri } from 'vscode';
+import { commands, Uri, workspace } from 'vscode';
+import { join } from 'path';
 import { Command, TypeText, OpenFile } from './instructions';
 
 export const typetext = async (instruction: TypeText): Promise<void> => {};
@@ -8,6 +9,11 @@ export const command = async (instruction: Command): Promise<void> => {
 };
 
 export const openfile = async (instruction: OpenFile): Promise<void> => {
-  const uri = Uri.file(instruction.path);
+  if (!workspace.workspaceFolders) {
+    return;
+  }
+
+  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+  const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);
 };
