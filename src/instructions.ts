@@ -1,8 +1,13 @@
-export type Command = { type: 'command'; command: string; args: any[] };
+export type Command = {
+  type: 'command';
+  command: string;
+  args: any[];
+  skip?: boolean;
+};
 
-export type TypeText = { type: 'typetext'; text: string };
+export type TypeText = { type: 'typetext'; text: string[]; skip?: boolean };
 
-export type OpenFile = { type: 'openfile'; path: string };
+export type OpenFile = { type: 'openfile'; path: string; skip?: boolean };
 
 export type Instruction = Command | OpenFile | TypeText;
 

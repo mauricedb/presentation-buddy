@@ -19,11 +19,13 @@ export const start = async () => {
 
   while (instruction) {
     const handler = instructionHandlers[instruction.type] as InstructionHandler;
+
     if (handler) {
       await handler(instruction);
     } else {
-      window.showErrorMessage(`Unkown isntruction type '${instruction.type}'`);
+      window.showErrorMessage(`Unkown instruction type '${instruction.type}'`);
     }
+
     instruction = instructions.shift();
   }
 
@@ -37,5 +39,5 @@ async function loadInstructions(
     join(workspaceFolder, '.presentation-buddy', 'instructions.json')
   );
 
-  return instructions;
+  return instructions.filter(instruction => !instruction.skip);
 }
