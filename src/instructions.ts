@@ -10,6 +10,8 @@ export type TypeText = { type: 'typetext'; text: string[] };
 
 export type OpenFile = { type: 'openfile'; path: string };
 
+export type GoTo = { type: 'goto'; line: number; column: number };
+
 export type Instruction = (Command | OpenFile | TypeText) & Skipable;
 
 export type InstructionHandler = (instruction: Instruction) => Promise<void>;
