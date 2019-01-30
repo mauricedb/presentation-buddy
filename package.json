@@ -2,6 +2,11 @@
   "name": "presentation-buddy",
   "displayName": "Presentation Buddy",
   "description": "Automatically type code during presentations",
+  "publisher": "mauricedebeijer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mauricedb/presentation-buddy"
+  },
   "version": "0.0.1",
   "author": "Maurice de Beijer",
   "license": "MIT",
