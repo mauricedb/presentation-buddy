@@ -1,5 +1,6 @@
 {
   "name": "presentation-buddy",
+  "preview": true,
   "displayName": "Presentation Buddy",
   "description": "Automatically type code during presentations",
   "publisher": "mauricedebeijer",
@@ -14,8 +15,19 @@
     "vscode": "^1.30.0"
   },
   "categories": [
+    "Snippets",
     "Other"
   ],
+  "keywords": [
+    "Presentation",
+    "Presentations",
+    "Type",
+    "Auto-Type"
+  ],
+  "galleryBanner": {
+    "color": "#193549",
+    "theme": "dark"
+  },
   "activationEvents": [
     "onCommand:presentationBuddy.start"
   ],
