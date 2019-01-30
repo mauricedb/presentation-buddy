@@ -26,15 +26,17 @@ export const typetext = async (instruction: TypeText): Promise<void> => {
       } else {
         pos = new Position(pos.line, pos.character + 1);
       }
-      char = data.shift();
     });
 
+    char = data.shift();
     await wait(60);
   }
 };
 
 export const command = async (instruction: Command): Promise<void> => {
-  await commands.executeCommand(instruction.command, ...instruction.args);
+  const { args = [] } = instruction;
+  await commands.executeCommand(instruction.command, ...args);
+  await wait(60);
 };
 
 export const openfile = async (instruction: OpenFile): Promise<void> => {
