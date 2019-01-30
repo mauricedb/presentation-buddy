@@ -8,6 +8,10 @@ export const typetext = async (instruction: TypeText): Promise<void> => {
     return;
   }
 
+  if (!editor.selection.isEmpty) {
+    await editor.edit(editorBuilder => editorBuilder.delete(editor.selection));
+  }
+
   const data = Array.from(instruction.text.join('\n'));
   let char = data.shift();
   let pos = editor.selection.start;
