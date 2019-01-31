@@ -1,8 +1,14 @@
 import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
-import { join } from 'path';
-import { Command, TypeText, OpenFile, GoTo } from './instructions';
+import { writeFile } from 'fs';
 
-export const typetext = async (instruction: TypeText): Promise<void> => {
+import { join } from 'path';
+import { promisify } from 'util';
+
+import { Command, TypeText, OpenFile, GoTo, CreateFile } from './instructions';
+
+const writeFileAsync = promisify(writeFile);
+
+export const typeText = async (instruction: TypeText): Promise<void> => {
   const editor = window.activeTextEditor;
   if (!editor) {
     return;
@@ -39,12 +45,26 @@ export const command = async (instruction: Command): Promise<void> => {
   await wait(60);
 };
 
-export const openfile = async (instruction: OpenFile): Promise<void> => {
+export const openFile = async (instruction: OpenFile): Promise<void> => {
   if (!workspace.workspaceFolders) {
     return;
   }
 
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+  const uri = Uri.file(join(workspaceFolder, instruction.path));
+  await commands.executeCommand('vscode.open', uri);
+  await wait(60);
+};
+
+export const createFile = async (instruction: CreateFile): Promise<void> => {
+  if (!workspace.workspaceFolders) {
+    return;
+  }
+
+  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+  const path = join(workspaceFolder, instruction.path);
+
+  await writeFileAsync(path, '', 'utf8');
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);
   await wait(60);

@@ -29,11 +29,16 @@
     "theme": "dark"
   },
   "activationEvents": [
+    "onCommand:presentationBuddy.init",
     "onCommand:presentationBuddy.start"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "presentationBuddy.init",
+        "title": "Presentation Buddy: Init"
+      },
       {
         "command": "presentationBuddy.start",
         "title": "Presentation Buddy: Start"

@@ -1,8 +1,32 @@
 import { window, workspace } from 'vscode';
+import { exists, mkdir } from 'fs';
 import { join } from 'path';
-import { readFile } from 'jsonfile';
+import { promisify } from 'util';
+import { readFile, writeFile } from 'jsonfile';
+
 import { Instruction, InstructionHandler } from './instructions';
 import * as instructionHandlers from './instruction-handlers';
+
+const existsAsync = promisify(exists);
+const mkdirAsync = promisify(mkdir);
+
+export const init = async () => {
+  if (!workspace.workspaceFolders) {
+    return;
+  }
+  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+
+  const json = await readFile(
+    join(__dirname, '..', 'examples', 'init', 'instructions.json')
+  );
+
+  const dir = join(workspaceFolder, '.presentation-buddy');
+  const fileName = join(dir, 'instructions.json');
+
+  await mkdirIfNotExists(dir);
+
+  await writeFile(fileName, json, { spaces: 2 });
+};
 
 export const start = async () => {
   // const editor = window.activeTextEditor;
@@ -31,6 +55,12 @@ export const start = async () => {
 
   console.log(instructions);
 };
+
+async function mkdirIfNotExists(dir: string) {
+  if (!(await existsAsync(dir))) {
+    await mkdirAsync(dir);
+  }
+}
 
 async function loadInstructions(
   workspaceFolder: string

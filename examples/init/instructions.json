@@ -1,0 +1,75 @@
+[
+  {
+    "type": "createFile",
+    "path": "src/demo.ts"
+  },
+  {
+    "type": "typeText",
+    "text": [
+      "// This comment was typed by Presentation Buddy",
+      "",
+      "export class Calculator {",
+      "",
+      "}",
+      "",
+      "This should be a comment"
+    ]
+  },
+  {
+    "type": "goto",
+    "line": 4,
+    "column": 1
+  },
+  {
+    "type": "typeText",
+    "text": [
+      "  add(x: number, y: number): number {",
+      "    return x + y;",
+      "  }"
+    ]
+  },
+  {
+    "type": "command",
+    "command": "workbench.action.files.save"
+  },
+  {
+    "type": "command",
+    "command": "workbench.action.closeActiveEditor"
+  },
+
+  {
+    "type": "openFile",
+    "path": "src/demo.ts"
+  },
+  {
+    "type": "command",
+    "command": "cursorTop"
+  },
+  {
+    "type": "command",
+    "command": "cursorMove",
+    "args": [{ "to": "down", "value": 3 }]
+  },
+  {
+    "type": "command",
+    "command": "cursorMove",
+    "args": [{ "to": "wrappedLineEnd" }]
+  },
+  {
+    "skip": true,
+    "type": "typeText",
+    "text": ["", "    // Add two numbers"]
+  },
+  {
+    "type": "command",
+    "command": "cursorBottom"
+  },
+  {
+    "type": "command",
+    "command": "editor.action.commentLine"
+  },
+  {
+    "type": "command",
+    "command": "workbench.action.files.save"
+  }
+]
