@@ -1,32 +1,24 @@
 [
   {
     "type": "createFile",
-    "path": "src/demo.ts"
+    "path": "src/calculator.js"
   },
   {
     "type": "typeText",
     "text": [
-      "// This comment was typed by Presentation Buddy",
+      "// This code is typed by Presentation Buddy",
       "",
-      "export class Calculator {",
-      "",
-      "}",
-      "",
-      "This should be a comment"
+      "class Calculator {",
+      "  add(x, y) {",
+      "    return x + y;",
+      "  }",
+      "}"
     ]
   },
   {
     "type": "goto",
     "line": 4,
     "column": 1
-  },
-  {
-    "type": "typeText",
-    "text": [
-      "  add(x: number, y: number): number {",
-      "    return x + y;",
-      "  }"
-    ]
   },
   {
     "type": "command",
@@ -36,40 +28,32 @@
     "type": "command",
     "command": "workbench.action.closeActiveEditor"
   },
-
+  {
+    "type": "createFile",
+    "path": "src/demo.js"
+  },
+  {
+    "type": "typeText",
+    "text": [
+      "// This code is typed by Presentation Buddy",
+      "",
+      "const Calculator = require('./calculator');",
+      "",
+      "const calc = new Calculator();",
+      "const sum = calc.add(1, 2)",
+      "console.log(`The sum of 1 + 2 = ${sum}`);"
+    ]
+  },
   {
     "type": "openFile",
-    "path": "src/demo.ts"
-  },
-  {
-    "type": "command",
-    "command": "cursorTop"
-  },
-  {
-    "type": "command",
-    "command": "cursorMove",
-    "args": [{ "to": "down", "value": 3 }]
-  },
-  {
-    "type": "command",
-    "command": "cursorMove",
-    "args": [{ "to": "wrappedLineEnd" }]
-  },
-  {
-    "skip": true,
-    "type": "typeText",
-    "text": ["", "    // Add two numbers"]
+    "path": "src/calculator.js"
   },
   {
     "type": "command",
     "command": "cursorBottom"
   },
   {
-    "type": "command",
-    "command": "editor.action.commentLine"
-  },
-  {
-    "type": "command",
-    "command": "workbench.action.files.save"
+    "type": "typeText",
+    "text": ["", "module.exports = Calculator;"]
   }
 ]
