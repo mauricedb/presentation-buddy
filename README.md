@@ -10,9 +10,8 @@ Automatically type code during presentations
 
 Initialize Presentation Buddy to create the required `.presentation-buddy\instructions.json` file with some demo instructions.
 You can do this using the Command Palette (Ctrl+Shift+P) and selecting the `Presentation Buddy: Init` command.
+
 ![Presentation Buddy: Init](./images/pb-init.png)
-
-
 
 ### Starting with Presentation Buddy: Start
 
