@@ -27,7 +27,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('presentationBuddy.start', async () => {
       try {
         await start();
-        vscode.window.showInformationMessage('Presentation Buddy: Start');
       } catch (e) {
         vscode.window.showErrorMessage(e.message);
       }

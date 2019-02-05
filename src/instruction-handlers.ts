@@ -8,6 +8,8 @@ import { Command, TypeText, OpenFile, GoTo, CreateFile } from './instructions';
 
 const writeFileAsync = promisify(writeFile);
 
+const getPause = () => 100;
+
 export const typeText = async (instruction: TypeText): Promise<void> => {
   const editor = window.activeTextEditor;
   if (!editor) {
@@ -35,14 +37,14 @@ export const typeText = async (instruction: TypeText): Promise<void> => {
     });
 
     char = data.shift();
-    await wait(60);
+    await wait(getPause());
   }
 };
 
 export const command = async (instruction: Command): Promise<void> => {
   const { args = [] } = instruction;
   await commands.executeCommand(instruction.command, ...args);
-  await wait(60);
+  await wait(getPause());
 };
 
 export const openFile = async (instruction: OpenFile): Promise<void> => {
@@ -53,7 +55,7 @@ export const openFile = async (instruction: OpenFile): Promise<void> => {
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);
-  await wait(60);
+  await wait(getPause());
 };
 
 export const createFile = async (instruction: CreateFile): Promise<void> => {
@@ -67,7 +69,7 @@ export const createFile = async (instruction: CreateFile): Promise<void> => {
   await writeFileAsync(path, '', 'utf8');
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);
-  await wait(60);
+  await wait(getPause());
 };
 
 export const goto = async (instruction: GoTo): Promise<void> => {
@@ -80,7 +82,7 @@ export const goto = async (instruction: GoTo): Promise<void> => {
   const position = new Position(line - 1, column - 1);
   editor.selection = new Selection(position, position);
   editor.revealRange(editor.selection);
-  await wait(60);
+  await wait(getPause());
 };
 
 function wait(time: number) {
