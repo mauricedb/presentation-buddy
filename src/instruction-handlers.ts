@@ -1,12 +1,8 @@
 import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
-import { writeFile } from 'fs';
-
-import { join } from 'path';
-import { promisify } from 'util';
+import { join, dirname } from 'path';
 
 import { Command, TypeText, OpenFile, GoTo, CreateFile } from './instructions';
-
-const writeFileAsync = promisify(writeFile);
+import { mkdirIfNotExists, writeFileAsync } from './utils';
 
 const getPause = () => 100;
 
@@ -66,6 +62,7 @@ export const createFile = async (instruction: CreateFile): Promise<void> => {
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
   const path = join(workspaceFolder, instruction.path);
 
+  await mkdirIfNotExists(dirname(path));
   await writeFileAsync(path, '', 'utf8');
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);

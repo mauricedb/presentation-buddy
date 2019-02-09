@@ -1,14 +1,10 @@
 import { window, workspace } from 'vscode';
-import { exists, mkdir } from 'fs';
 import { join } from 'path';
-import { promisify } from 'util';
 import { readFile, writeFile } from 'jsonfile';
 
 import { Instruction, InstructionHandler } from './instructions';
 import * as instructionHandlers from './instruction-handlers';
-
-const existsAsync = promisify(exists);
-const mkdirAsync = promisify(mkdir);
+import { mkdirIfNotExists } from './utils';
 
 export const init = async () => {
   if (!workspace.workspaceFolders) {
@@ -56,11 +52,6 @@ export const start = async () => {
   console.log(instructions);
 };
 
-async function mkdirIfNotExists(dir: string) {
-  if (!(await existsAsync(dir))) {
-    await mkdirAsync(dir);
-  }
-}
 
 async function loadInstructions(
   workspaceFolder: string
