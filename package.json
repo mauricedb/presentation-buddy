@@ -30,7 +30,8 @@
   },
   "activationEvents": [
     "onCommand:presentationBuddy.init",
-    "onCommand:presentationBuddy.start"
+    "onCommand:presentationBuddy.start",
+    "onCommand:presentationBuddy.continue"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -42,6 +43,10 @@
       {
         "command": "presentationBuddy.start",
         "title": "Presentation Buddy: Start"
+      },
+      {
+        "command": "presentationBuddy.continue",
+        "title": "Presentation Buddy: Continue"
       }
     ]
   },

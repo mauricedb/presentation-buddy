@@ -1,8 +1,9 @@
 import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
 import { join, dirname } from 'path';
 
-import { Command, TypeText, OpenFile, GoTo, CreateFile } from './instructions';
+import { Command, TypeText, OpenFile, GoTo, CreateFile, Wait } from './instructions';
 import { mkdirIfNotExists, writeFileAsync } from './utils';
+import { setAwaiter } from './wait-for-input';
 
 const getPause = () => 100;
 
@@ -33,14 +34,14 @@ export const typeText = async (instruction: TypeText): Promise<void> => {
     });
 
     char = data.shift();
-    await wait(getPause());
+    instruction.delay === 0 ? void(0) : await timeout(instruction.delay || getPause());
   }
 };
 
 export const command = async (instruction: Command): Promise<void> => {
   const { args = [] } = instruction;
   await commands.executeCommand(instruction.command, ...args);
-  await wait(getPause());
+  await timeout(getPause());
 };
 
 export const openFile = async (instruction: OpenFile): Promise<void> => {
@@ -51,7 +52,7 @@ export const openFile = async (instruction: OpenFile): Promise<void> => {
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);
-  await wait(getPause());
+  await timeout(getPause());
 };
 
 export const createFile = async (instruction: CreateFile): Promise<void> => {
@@ -66,7 +67,7 @@ export const createFile = async (instruction: CreateFile): Promise<void> => {
   await writeFileAsync(path, '', 'utf8');
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand('vscode.open', uri);
-  await wait(getPause());
+  await timeout(getPause());
 };
 
 export const goto = async (instruction: GoTo): Promise<void> => {
@@ -79,9 +80,27 @@ export const goto = async (instruction: GoTo): Promise<void> => {
   const position = new Position(line - 1, column - 1);
   editor.selection = new Selection(position, position);
   editor.revealRange(editor.selection);
-  await wait(getPause());
+  await timeout(getPause());
 };
 
-function wait(time: number) {
+export const wait = (instruction: Wait): Promise<void> => {
+  return new Promise(async (resolve, reject) => {
+    if (typeof instruction.length === 'number') {
+      await timeout(instruction.length);
+      await timeout(getPause());
+      resolve();
+    }
+    else if (instruction.length === 'manual') {
+      setAwaiter(() => {
+        resolve();
+      });
+    }
+    else {
+      reject();
+    }
+  })
+}
+
+function timeout(time: number) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
