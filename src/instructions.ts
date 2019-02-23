@@ -6,7 +6,7 @@ export type Command = {
   args: any[];
 };
 
-export type Wait = { type: 'wait', length: number | 'manual' };
+export type Wait = { type: 'wait', delay: number | 'manual' };
 
 export type TypeText = { type: 'typeText'; text: string[], delay?: number };
 

@@ -85,12 +85,11 @@ export const goto = async (instruction: GoTo): Promise<void> => {
 
 export const wait = (instruction: Wait): Promise<void> => {
   return new Promise(async (resolve, reject) => {
-    if (typeof instruction.length === 'number') {
-      await timeout(instruction.length);
-      await timeout(getPause());
+    if (typeof instruction.delay === 'number') {
+      await timeout(instruction.delay);
       resolve();
     }
-    else if (instruction.length === 'manual') {
+    else if (instruction.delay === 'manual') {
       setAwaiter(() => {
         resolve();
       });
@@ -98,8 +97,8 @@ export const wait = (instruction: Wait): Promise<void> => {
     else {
       reject();
     }
-  })
-}
+  });
+};
 
 function timeout(time: number) {
   return new Promise(resolve => setTimeout(resolve, time));
