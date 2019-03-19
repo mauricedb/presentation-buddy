@@ -58,11 +58,11 @@
     "test": "yarn run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/mocha": "2.2.42",
-    "@types/node": "8.10.25",
-    "tslint": "5.8.0",
-    "typescript": "3.1.4",
-    "vscode": "1.1.25"
+    "@types/mocha": "5.2.6",
+    "@types/node": "11.11.3",
+    "tslint": "5.14.0",
+    "typescript": "3.3.3333",
+    "vscode": "1.1.30"
   },
   "dependencies": {
     "@types/jsonfile": "5.0.0",
