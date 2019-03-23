@@ -1,3 +1,4 @@
+import { workspace } from 'vscode';
 import { exists, mkdir, writeFile } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
@@ -20,3 +21,15 @@ export async function mkdirIfNotExists(dir: string) {
 }
 
 export const writeFileAsync = promisify(writeFile);
+
+export function timeout(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+export function getDelay() {
+  const pause = workspace
+    .getConfiguration()
+    .get<number>('presentation-buddy.delay');
+
+  return pause || 100;
+}

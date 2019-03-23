@@ -48,7 +48,18 @@
         "command": "presentationBuddy.continue",
         "title": "Presentation Buddy: Continue"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Presentation Buddy configuration",
+      "properties": {
+        "presentation-buddy.delay": {
+          "type": "integer",
+          "default": 100,
+          "description": "Delay (in ms) between keys entered",
+          "scope": "user"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

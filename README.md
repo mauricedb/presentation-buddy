@@ -21,14 +21,9 @@ Once Presentation Buddy is initialized and you have updated the instructions you
 
 ## Extension Settings
 
-ToDo
-
-For example:
-
 This extension contributes the following settings:
 
-- `myExtension.enable`: enable/disable this extension
-- `myExtension.thing`: set to `blah` to do something
+- `presentation-buddy.delay`: Delay (in ms) between keys entered. Defaults to 100ms.
 
 ## Example instructions
 
