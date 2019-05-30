@@ -1,5 +1,5 @@
-import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
-import { join, dirname } from 'path';
+import { commands, Position, Selection, Uri, window, workspace } from "vscode";
+import { join, dirname } from "path";
 
 import {
   Command,
@@ -8,9 +8,9 @@ import {
   GoTo,
   CreateFile,
   Wait
-} from './instructions';
-import { mkdirIfNotExists, writeFileAsync, timeout, getDelay } from './utils';
-import { setAwaiter } from './wait-for-input';
+} from "./instructions";
+import { mkdirIfNotExists, writeFileAsync, timeout, getDelay } from "./utils";
+import { setAwaiter } from "./wait-for-input";
 
 export const typeText = async (instruction: TypeText): Promise<void> => {
   const editor = window.activeTextEditor;
@@ -22,7 +22,7 @@ export const typeText = async (instruction: TypeText): Promise<void> => {
     await editor.edit(editorBuilder => editorBuilder.delete(editor.selection));
   }
 
-  const data = Array.from(instruction.text.join('\n'));
+  const data = Array.from(instruction.text.join("\n"));
   let char = data.shift();
   let pos = editor.selection.start;
 
@@ -31,7 +31,7 @@ export const typeText = async (instruction: TypeText): Promise<void> => {
       editor.selection = new Selection(pos, pos);
 
       editBuilder.insert(editor.selection.active, char!);
-      if (char === '\n') {
+      if (char === "\n") {
         pos = new Position(pos.line + 1, pos.character);
       } else {
         pos = new Position(pos.line, pos.character + 1);
@@ -46,9 +46,12 @@ export const typeText = async (instruction: TypeText): Promise<void> => {
 };
 
 export const command = async (instruction: Command): Promise<void> => {
-  const { args = [] } = instruction;
-  await commands.executeCommand(instruction.command, ...args);
-  await timeout(getDelay());
+  const { args = [], repeat = 1 } = instruction;
+
+  for (let index = 0; index < repeat; index++) {
+    await commands.executeCommand(instruction.command, ...args);
+    await timeout(getDelay());
+  }
 };
 
 export const openFile = async (instruction: OpenFile): Promise<void> => {
@@ -58,7 +61,7 @@ export const openFile = async (instruction: OpenFile): Promise<void> => {
 
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
   const uri = Uri.file(join(workspaceFolder, instruction.path));
-  await commands.executeCommand('vscode.open', uri);
+  await commands.executeCommand("vscode.open", uri);
   await timeout(getDelay());
 };
 
@@ -71,9 +74,9 @@ export const createFile = async (instruction: CreateFile): Promise<void> => {
   const path = join(workspaceFolder, instruction.path);
 
   await mkdirIfNotExists(dirname(path));
-  await writeFileAsync(path, '', 'utf8');
+  await writeFileAsync(path, "", "utf8");
   const uri = Uri.file(join(workspaceFolder, instruction.path));
-  await commands.executeCommand('vscode.open', uri);
+  await commands.executeCommand("vscode.open", uri);
   await timeout(getDelay());
 };
 
@@ -92,10 +95,10 @@ export const goto = async (instruction: GoTo): Promise<void> => {
 
 export const wait = (instruction: Wait): Promise<void> => {
   return new Promise(async (resolve, reject) => {
-    if (typeof instruction.delay === 'number') {
+    if (typeof instruction.delay === "number") {
       await timeout(instruction.delay);
       resolve();
-    } else if (instruction.delay === 'manual') {
+    } else if (instruction.delay === "manual") {
       setAwaiter(() => {
         resolve();
       });
