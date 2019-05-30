@@ -25,6 +25,111 @@ This extension contributes the following settings:
 
 - `presentation-buddy.delay`: Delay (in ms) between keys entered. Defaults to 100ms.
 
+## Instructions
+
+Note: Any instruction will accept a `"skip": true` settings causing it to be ignored
+
+### TypeText
+
+Type some text at the current cursor position of the currently open file. The text setting can either be a string or an array of strings. In the case of an array of strings each string is entered on a new line.
+
+Example:
+
+```JSON
+{
+  "type": "typeText",
+  "text": [
+    "// Some comment",
+    "const lineTwo = true;"
+    ]
+  },
+}
+```
+
+### OpenFile
+
+Opens the file specified in the editor. Note that the file needs to exist.
+
+See also: CreateFile
+
+Example:
+
+```JSON
+{
+  "type": "openFile",
+  "path": "src/my-file.js"
+}
+```
+
+### GoTo
+
+Go to a spefic position in the currently open file. The positions are 1 based so they match up with what Visual Studio Code displays. Both the line and column default to 1 if not specified.
+
+Example:
+
+```JSON
+{
+  "type": "goto",
+  "line": 75,
+  "column": 21
+}
+```
+
+### Command
+
+Executes one of the standard Visual Studio Code commands. The command should be one of the standard Visual Studio Code command names. See the Keyboard shortcuts for the known commands. When the command requires additional parameters an **args** array or primitive types can be passed along.
+
+Note: Not all commands might work as expected so your mileage my vary.
+
+Examples:
+
+```JSON
+{
+  "type": "command",
+  "command": "workbench.action.files.save"
+},
+{
+  "type": "command",
+  "command": "editor.action.smartSelect.expand"
+},
+{
+  "type": "command",
+  "command": "editor.action.clipboardPasteAction"
+}
+```
+
+### CreateFile
+
+Creates the file specified and opens it in the editor.
+
+Note: If the file specified already exists it is replaced with an empty file.
+
+Example:
+
+```JSON
+{
+  "type": "createFile",
+  "path": "src/my-file.js"
+}
+```
+
+### Wait
+
+Pauses playback for a pecified period. A delay can be passed as either a number representing the number of milliseconds to wait or and the `"manual"`. In the case of `"manual"` playback will only resume when the `Presentation Buddy: Continue` command is executed.
+
+Examples:
+
+```JSON
+{
+  "type": "wait",
+  "delay": 10000
+},
+{
+  "type": "wait",
+  "delay": "manual"
+}
+```
+
 ## Example instructions
 
 See `.presentation-buddy\instructions.json`
