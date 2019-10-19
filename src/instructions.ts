@@ -7,7 +7,7 @@ export type Command = {
   repeat: number;
 };
 
-export type Wait = { type: "wait"; delay: number | "manual" };
+export type Wait = { type: "wait"; delay: number | "manual"; save?: boolean };
 
 export type TypeText = { type: "typeText"; text: string[]; delay?: number };
 

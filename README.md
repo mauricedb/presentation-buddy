@@ -116,7 +116,7 @@ Example:
 
 ### Wait
 
-Pauses playback for a pecified period. A delay can be passed as either a number representing the number of milliseconds to wait or and the `"manual"`. In the case of `"manual"` playback will only resume when the `Presentation Buddy: Continue` command is executed.
+Pauses playback for a pecified period. A delay can be passed as either a number representing the number of milliseconds to wait or and the `"manual"`. In the case of `"manual"` playback will only resume when the `Presentation Buddy: Continue` command is executed. If the `save` option is set to true all dirty editor files in the workbench will be saved first.
 
 Examples:
 
@@ -127,7 +127,8 @@ Examples:
 },
 {
   "type": "wait",
-  "delay": "manual"
+  "delay": "manual",
+  "save": true
 }
 ```
 

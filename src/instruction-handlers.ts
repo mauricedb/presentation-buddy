@@ -95,6 +95,15 @@ export const goto = async (instruction: GoTo): Promise<void> => {
 
 export const wait = (instruction: Wait): Promise<void> => {
   return new Promise(async (resolve, reject) => {
+    if (instruction.save) {
+      await command({
+        type: "command",
+        command: "workbench.action.files.saveAll",
+        args: [],
+        repeat: 1
+      });
+    }
+
     if (typeof instruction.delay === "number") {
       await timeout(instruction.delay);
       resolve();
