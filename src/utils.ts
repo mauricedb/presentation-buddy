@@ -1,16 +1,44 @@
-import { workspace } from 'vscode';
-import { exists, mkdir, writeFile } from 'fs';
-import { join } from 'path';
-import { promisify } from 'util';
+import { workspace, window, Uri } from "vscode";
+import { join, posix } from "path";
 
-const existsAsync = promisify(exists);
-const mkdirAsync = promisify(mkdir);
+const pathToUri = (path: string): Uri => {
+  path = path.replace(/\\/g, posix.sep);
+
+  if (window.activeTextEditor) {
+    const tsUri = window.activeTextEditor.document.uri;
+    if (tsUri) {
+      const jsUri = tsUri.with({ path });
+
+      return jsUri;
+    }
+  }
+  throw new Error("No window.activeTextEditor.document.uri?");
+};
+
+const existsAsync = async (path: string): Promise<boolean> => {
+  try {
+    const uri = pathToUri(path);
+    await workspace.fs.stat(uri);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const mkdirAsync = async (path: string): Promise<void> => {
+  const uri = pathToUri(path);
+  try {
+    await workspace.fs.createDirectory(uri);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export async function mkdirIfNotExists(dir: string) {
   const parts = dir.split(/[\/\\]/);
 
   if (parts.length) {
-    let currentPath = parts.shift() || '';
+    let currentPath = parts.shift() || "";
     for (const part of parts) {
       currentPath = join(currentPath, part);
       if (!(await existsAsync(currentPath))) {
@@ -20,7 +48,15 @@ export async function mkdirIfNotExists(dir: string) {
   }
 }
 
-export const writeFileAsync = promisify(writeFile);
+export const writeFileAsync = async (
+  path: string,
+  data: string = "",
+  encoding: string = "utf8"
+): Promise<void> => {
+  const uri = pathToUri(path);
+  const content = Buffer.from(data, encoding);
+  await workspace.fs.writeFile(uri, content);
+};
 
 export function timeout(time: number) {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -29,7 +65,7 @@ export function timeout(time: number) {
 export function getDelay() {
   const pause = workspace
     .getConfiguration()
-    .get<number>('presentation-buddy.delay');
+    .get<number>("presentation-buddy.delay");
 
   return pause || 100;
 }

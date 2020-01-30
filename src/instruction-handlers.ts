@@ -74,7 +74,7 @@ export const createFile = async (instruction: CreateFile): Promise<void> => {
   const path = join(workspaceFolder, instruction.path);
 
   await mkdirIfNotExists(dirname(path));
-  await writeFileAsync(path, "", "utf8");
+  await writeFileAsync(path);
   const uri = Uri.file(join(workspaceFolder, instruction.path));
   await commands.executeCommand("vscode.open", uri);
   await timeout(getDelay());
