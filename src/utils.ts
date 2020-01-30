@@ -1,27 +1,41 @@
-import { workspace, window } from "vscode";
-// import vscode from "vscode";
-import { mkdir, writeFile } from "fs";
+import { workspace, window, Uri } from "vscode";
+import { join, posix } from "path";
 
-import { join } from "path";
 import { promisify } from "util";
+import { writeFile } from "fs";
 
-const existsAsync = async (path: string): Promise<boolean> => {
+const pathToUri = (path: string): Uri => {
+  path = path.replace(/\\/g, posix.sep);
+
   if (window.activeTextEditor) {
     const tsUri = window.activeTextEditor.document.uri;
     if (tsUri) {
       const jsUri = tsUri.with({ path });
-      try {
-        await workspace.fs.stat(jsUri);
-        return true;
-      } catch {
-        return false;
-      }
+
+      return jsUri;
     }
   }
-  return false;
+  throw new Error("No window.activeTextEditor.document.uri?");
 };
 
-const mkdirAsync = promisify(mkdir);
+const existsAsync = async (path: string): Promise<boolean> => {
+  try {
+    const uri = pathToUri(path);
+    await workspace.fs.stat(uri);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const mkdirAsync = async (path: string): Promise<void> => {
+  const uri = pathToUri(path);
+  try {
+    await workspace.fs.createDirectory(uri);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export async function mkdirIfNotExists(dir: string) {
   const parts = dir.split(/[\/\\]/);
