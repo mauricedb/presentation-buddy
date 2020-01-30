@@ -1,9 +1,6 @@
 import { workspace, window, Uri } from "vscode";
 import { join, posix } from "path";
 
-import { promisify } from "util";
-import { writeFile } from "fs";
-
 const pathToUri = (path: string): Uri => {
   path = path.replace(/\\/g, posix.sep);
 
@@ -51,7 +48,15 @@ export async function mkdirIfNotExists(dir: string) {
   }
 }
 
-export const writeFileAsync = promisify(writeFile);
+export const writeFileAsync = async (
+  path: string,
+  data: string = "",
+  encoding: string = "utf8"
+): Promise<void> => {
+  const uri = pathToUri(path);
+  const content = Buffer.from(data, encoding);
+  await workspace.fs.writeFile(uri, content);
+};
 
 export function timeout(time: number) {
   return new Promise(resolve => setTimeout(resolve, time));
