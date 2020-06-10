@@ -1,5 +1,6 @@
 import { workspace, window, Uri } from "vscode";
 import { join, posix } from "path";
+import { TextDecoder } from "util";
 
 const pathToUri = (path: string): Uri => {
   path = path.replace(/\\/g, posix.sep);
@@ -56,6 +57,16 @@ export const writeFileAsync = async (
   const uri = pathToUri(path);
   const content = Buffer.from(data, encoding);
   await workspace.fs.writeFile(uri, content);
+};
+
+export const readFileAsync = async (
+  path: string,
+  encoding: string = "utf8"
+): Promise<string> => {
+  const uri = pathToUri(path);
+  const content = await workspace.fs.readFile(uri);
+  const data = new TextDecoder(encoding).decode(content);
+  return data;
 };
 
 export function timeout(time: number) {

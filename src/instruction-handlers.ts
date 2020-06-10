@@ -7,27 +7,60 @@ import {
   OpenFile,
   GoTo,
   CreateFile,
-  Wait
+  Wait,
+  TypeTextFromFile,
 } from "./instructions";
-import { mkdirIfNotExists, writeFileAsync, timeout, getDelay } from "./utils";
+import {
+  mkdirIfNotExists,
+  writeFileAsync,
+  timeout,
+  getDelay,
+  readFileAsync,
+} from "./utils";
 import { setAwaiter } from "./wait-for-input";
 
+export const typeTextFromFile = async (
+  instruction: TypeTextFromFile
+): Promise<void> => {
+  if (!workspace.workspaceFolders) {
+    return;
+  }
+
+  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+  const path = join(workspaceFolder, ".presentation-buddy", instruction.path);
+
+  const text = await readFileAsync(path);
+  const data = Array.from(text.split("\r\n").join("\n"));
+
+  await typeTextIntoActiveTextEditor(data, instruction.delay);
+};
+
 export const typeText = async (instruction: TypeText): Promise<void> => {
+  const data = Array.from(instruction.text.join("\n"));
+
+  await typeTextIntoActiveTextEditor(data, instruction.delay);
+};
+
+const typeTextIntoActiveTextEditor = async (
+  data: string[],
+  delay?: number
+): Promise<void> => {
   const editor = window.activeTextEditor;
   if (!editor) {
     return;
   }
 
   if (!editor.selection.isEmpty) {
-    await editor.edit(editorBuilder => editorBuilder.delete(editor.selection));
+    await editor.edit((editorBuilder) =>
+      editorBuilder.delete(editor.selection)
+    );
   }
 
-  const data = Array.from(instruction.text.join("\n"));
   let char = data.shift();
   let pos = editor.selection.start;
 
   while (char) {
-    await editor.edit(editBuilder => {
+    await editor.edit((editBuilder) => {
       editor.selection = new Selection(pos, pos);
 
       editBuilder.insert(editor.selection.active, char!);
@@ -39,9 +72,7 @@ export const typeText = async (instruction: TypeText): Promise<void> => {
     });
 
     char = data.shift();
-    instruction.delay === 0
-      ? void 0
-      : await timeout(instruction.delay || getDelay());
+    delay === 0 ? void 0 : await timeout(delay || getDelay());
   }
 };
 
@@ -100,7 +131,7 @@ export const wait = (instruction: Wait): Promise<void> => {
         type: "command",
         command: "workbench.action.files.saveAll",
         args: [],
-        repeat: 1
+        repeat: 1,
       });
     }
 
