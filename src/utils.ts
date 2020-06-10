@@ -1,6 +1,6 @@
-import { workspace, window, Uri } from "vscode";
-import { join, posix } from "path";
-import { TextDecoder } from "util";
+import { workspace, window, Uri } from 'vscode';
+import { join, posix } from 'path';
+import { TextDecoder } from 'util';
 
 const pathToUri = (path: string): Uri => {
   path = path.replace(/\\/g, posix.sep);
@@ -13,7 +13,7 @@ const pathToUri = (path: string): Uri => {
       return jsUri;
     }
   }
-  throw new Error("No window.activeTextEditor.document.uri?");
+  throw new Error('No window.activeTextEditor.document.uri?');
 };
 
 const existsAsync = async (path: string): Promise<boolean> => {
@@ -39,7 +39,7 @@ export async function mkdirIfNotExists(dir: string) {
   const parts = dir.split(/[\/\\]/);
 
   if (parts.length) {
-    let currentPath = parts.shift() || "";
+    let currentPath = parts.shift() || '';
     for (const part of parts) {
       currentPath = join(currentPath, part);
       if (!(await existsAsync(currentPath))) {
@@ -51,17 +51,16 @@ export async function mkdirIfNotExists(dir: string) {
 
 export const writeFileAsync = async (
   path: string,
-  data: string = "",
-  encoding: string = "utf8"
+  data: string = ''
 ): Promise<void> => {
   const uri = pathToUri(path);
-  const content = Buffer.from(data, encoding);
+  const content = Buffer.from(data, 'utf8');
   await workspace.fs.writeFile(uri, content);
 };
 
 export const readFileAsync = async (
   path: string,
-  encoding: string = "utf8"
+  encoding: string = 'utf8'
 ): Promise<string> => {
   const uri = pathToUri(path);
   const content = await workspace.fs.readFile(uri);
@@ -70,13 +69,13 @@ export const readFileAsync = async (
 };
 
 export function timeout(time: number) {
-  return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 export function getDelay() {
   const pause = workspace
     .getConfiguration()
-    .get<number>("presentation-buddy.delay");
+    .get<number>('presentation-buddy.delay');
 
   return pause || 100;
 }
