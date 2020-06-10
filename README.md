@@ -41,8 +41,20 @@ Example:
   "text": [
     "// Some comment",
     "const lineTwo = true;"
-    ]
-  },
+  ]
+}
+```
+
+### TypeTextFromFile
+
+Type some text at the current cursor position of the currently open file. The text is read from the file indicated by the path.
+
+Example:
+
+```JSON
+{
+  "type": "typeTextFromFile",
+  "path": ".presentation-buddy/text-source.js"
 }
 ```
 
