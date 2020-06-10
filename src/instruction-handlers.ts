@@ -1,5 +1,5 @@
-import { commands, Position, Selection, Uri, window, workspace } from "vscode";
-import { join, dirname } from "path";
+import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
+import { join, dirname } from 'path';
 
 import {
   Command,
@@ -9,15 +9,15 @@ import {
   CreateFile,
   Wait,
   TypeTextFromFile,
-} from "./instructions";
+} from './instructions';
 import {
   mkdirIfNotExists,
   writeFileAsync,
   timeout,
   getDelay,
   readFileAsync,
-} from "./utils";
-import { setAwaiter } from "./wait-for-input";
+} from './utils';
+import { setAwaiter } from './wait-for-input';
 
 export const typeTextFromFile = async (
   instruction: TypeTextFromFile
@@ -27,16 +27,16 @@ export const typeTextFromFile = async (
   }
 
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
-  const path = join(workspaceFolder, ".presentation-buddy", instruction.path);
+  const path = join(workspaceFolder, '.presentation-buddy', instruction.path);
 
   const text = await readFileAsync(path);
-  const data = Array.from(text.split("\r\n").join("\n"));
+  const data = Array.from(text.split('\r\n').join('\n'));
 
   await typeTextIntoActiveTextEditor(data, instruction.delay);
 };
 
 export const typeText = async (instruction: TypeText): Promise<void> => {
-  const data = Array.from(instruction.text.join("\n"));
+  const data = Array.from(instruction.text.join('\n'));
 
   await typeTextIntoActiveTextEditor(data, instruction.delay);
 };
@@ -64,7 +64,7 @@ const typeTextIntoActiveTextEditor = async (
       editor.selection = new Selection(pos, pos);
 
       editBuilder.insert(editor.selection.active, char!);
-      if (char === "\n") {
+      if (char === '\n') {
         pos = new Position(pos.line + 1, pos.character);
       } else {
         pos = new Position(pos.line, pos.character + 1);
@@ -92,7 +92,7 @@ export const openFile = async (instruction: OpenFile): Promise<void> => {
 
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
   const uri = Uri.file(join(workspaceFolder, instruction.path));
-  await commands.executeCommand("vscode.open", uri);
+  await commands.executeCommand('vscode.open', uri);
   await timeout(getDelay());
 };
 
@@ -107,7 +107,7 @@ export const createFile = async (instruction: CreateFile): Promise<void> => {
   await mkdirIfNotExists(dirname(path));
   await writeFileAsync(path);
   const uri = Uri.file(join(workspaceFolder, instruction.path));
-  await commands.executeCommand("vscode.open", uri);
+  await commands.executeCommand('vscode.open', uri);
   await timeout(getDelay());
 };
 
@@ -128,17 +128,17 @@ export const wait = (instruction: Wait): Promise<void> => {
   return new Promise(async (resolve, reject) => {
     if (instruction.save) {
       await command({
-        type: "command",
-        command: "workbench.action.files.saveAll",
+        type: 'command',
+        command: 'workbench.action.files.saveAll',
         args: [],
         repeat: 1,
       });
     }
 
-    if (typeof instruction.delay === "number") {
+    if (typeof instruction.delay === 'number') {
       await timeout(instruction.delay);
       resolve();
-    } else if (instruction.delay === "manual") {
+    } else if (instruction.delay === 'manual') {
       setAwaiter(() => {
         resolve();
       });

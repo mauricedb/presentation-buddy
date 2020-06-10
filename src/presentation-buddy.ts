@@ -1,6 +1,6 @@
 import { window, workspace } from 'vscode';
 import { join } from 'path';
-import { readFile, writeFile } from 'jsonfile';
+import { jsonc } from 'jsonc';
 
 import { Instruction, InstructionHandler } from './instructions';
 import * as instructionHandlers from './instruction-handlers';
@@ -12,7 +12,7 @@ export const init = async () => {
   }
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
 
-  const json = await readFile(
+  const json = await jsonc.read(
     join(__dirname, '..', 'examples', 'init', 'instructions.json')
   );
 
@@ -21,7 +21,7 @@ export const init = async () => {
 
   await mkdirIfNotExists(dir);
 
-  await writeFile(fileName, json, { spaces: 2 });
+  await jsonc.write(fileName, json, { space: 2 });
 };
 
 export const start = async () => {
@@ -52,13 +52,15 @@ export const start = async () => {
   console.log(instructions);
 };
 
-
 async function loadInstructions(
   workspaceFolder: string
-): Promise<(Instruction)[]> {
-  const instructions: Instruction[] = await readFile(
-    join(workspaceFolder, '.presentation-buddy', 'instructions.json')
+): Promise<Instruction[]> {
+  const path = join(
+    workspaceFolder,
+    '.presentation-buddy',
+    'instructions.json'
   );
+  const instructions: Instruction[] = await jsonc.read(path);
 
-  return instructions.filter(instruction => !instruction.skip);
+  return instructions.filter((instruction) => !instruction.skip);
 }
