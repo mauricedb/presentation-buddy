@@ -47,14 +47,14 @@ Example:
 
 ### TypeTextFromFile
 
-Type some text at the current cursor position of the currently open file. The text is read from the file indicated by the path.
+Type some text at the current cursor position of the currently open file. The text is read from the file indicated by the path. The path is relative to the `.presentation-buddy` folder.
 
 Example:
 
 ```JSON
 {
   "type": "typeTextFromFile",
-  "path": ".presentation-buddy/text-source.js"
+  "path": "./text-source.js"
 }
 ```
 

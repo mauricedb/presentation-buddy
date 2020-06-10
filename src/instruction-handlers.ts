@@ -8,14 +8,14 @@ import {
   GoTo,
   CreateFile,
   Wait,
-  TypeTextFromFile
+  TypeTextFromFile,
 } from "./instructions";
 import {
   mkdirIfNotExists,
   writeFileAsync,
   timeout,
   getDelay,
-  readFileAsync
+  readFileAsync,
 } from "./utils";
 import { setAwaiter } from "./wait-for-input";
 
@@ -27,7 +27,7 @@ export const typeTextFromFile = async (
   }
 
   const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
-  const path = join(workspaceFolder, instruction.path);
+  const path = join(workspaceFolder, ".presentation-buddy", instruction.path);
 
   const text = await readFileAsync(path);
   const data = Array.from(text.split("\r\n").join("\n"));
@@ -51,14 +51,16 @@ const typeTextIntoActiveTextEditor = async (
   }
 
   if (!editor.selection.isEmpty) {
-    await editor.edit(editorBuilder => editorBuilder.delete(editor.selection));
+    await editor.edit((editorBuilder) =>
+      editorBuilder.delete(editor.selection)
+    );
   }
 
   let char = data.shift();
   let pos = editor.selection.start;
 
   while (char) {
-    await editor.edit(editBuilder => {
+    await editor.edit((editBuilder) => {
       editor.selection = new Selection(pos, pos);
 
       editBuilder.insert(editor.selection.active, char!);
@@ -129,7 +131,7 @@ export const wait = (instruction: Wait): Promise<void> => {
         type: "command",
         command: "workbench.action.files.saveAll",
         args: [],
-        repeat: 1
+        repeat: 1,
       });
     }
 
