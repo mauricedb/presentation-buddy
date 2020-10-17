@@ -66,6 +66,10 @@ const typeTextIntoActiveTextEditor = async (
       editBuilder.insert(editor.selection.active, char!);
       if (char === '\n') {
         pos = new Position(pos.line + 1, pos.character);
+        // scroll to last line
+        const lastLine = editor.document.lineCount - 1;
+        const lastLineRange = editor.document.lineAt(lastLine).range;
+        editor.revealRange(lastLineRange);
       } else {
         pos = new Position(pos.line, pos.character + 1);
       }
