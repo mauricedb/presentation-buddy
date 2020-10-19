@@ -1,4 +1,12 @@
-import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
+import {
+  commands,
+  Position,
+  Selection,
+  TextEditorRevealType,
+  Uri,
+  window,
+  workspace,
+} from 'vscode';
 import { join, dirname } from 'path';
 
 import {
@@ -122,7 +130,11 @@ export const goto = async (instruction: GoTo): Promise<void> => {
 
   const position = new Position(line - 1, column - 1);
   editor.selection = new Selection(position, position);
-  editor.revealRange(editor.selection);
+  editor.revealRange(
+    editor.selection,
+    TextEditorRevealType.InCenterIfOutsideViewport
+  );
+
   await timeout(getDelay());
 };
 
