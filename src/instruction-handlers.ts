@@ -1,4 +1,12 @@
-import { commands, Position, Selection, Uri, window, workspace } from 'vscode';
+import {
+  commands,
+  Position,
+  Selection,
+  TextEditorRevealType,
+  Uri,
+  window,
+  workspace,
+} from 'vscode';
 import { join, dirname } from 'path';
 
 import {
@@ -66,10 +74,8 @@ const typeTextIntoActiveTextEditor = async (
       editBuilder.insert(editor.selection.active, char!);
       if (char === '\n') {
         pos = new Position(pos.line + 1, pos.character);
-        // scroll to last line
-        const lastLine = editor.document.lineCount - 1;
-        const lastLineRange = editor.document.lineAt(lastLine).range;
-        editor.revealRange(lastLineRange);
+        // scroll to current line if needed
+        editor.revealRange(editor.selection, TextEditorRevealType.Default);
       } else {
         pos = new Position(pos.line, pos.character + 1);
       }
@@ -124,7 +130,11 @@ export const goto = async (instruction: GoTo): Promise<void> => {
 
   const position = new Position(line - 1, column - 1);
   editor.selection = new Selection(position, position);
-  editor.revealRange(editor.selection);
+  editor.revealRange(
+    editor.selection,
+    TextEditorRevealType.InCenterIfOutsideViewport
+  );
+
   await timeout(getDelay());
 };
 
