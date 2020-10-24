@@ -91,7 +91,7 @@ Example:
 
 Executes one of the standard Visual Studio Code commands. The command should be one of the standard Visual Studio Code command names. See the Keyboard shortcuts for the known commands. When the command requires additional parameters an **args** array or primitive types can be passed along. Add an optional `repeat` settings if a command needs to be execured multiple times.
 
-Note: Not all commands might work as expected so your mileage my vary.
+Note: Not all commands might work as expected so your mileage may vary.
 
 Examples:
 
