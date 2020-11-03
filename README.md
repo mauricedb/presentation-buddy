@@ -87,7 +87,7 @@ Example:
 }
 ```
 
-### GoTo
+### Select
 
 Select from the current position to a specific position in the currently open file. The positions are 1 based so they match up with what Visual Studio Code displays. Both the line and column default to 1 if not specified.
 
