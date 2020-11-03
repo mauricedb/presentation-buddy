@@ -14,6 +14,7 @@ import {
   TypeText,
   OpenFile,
   GoTo,
+  Select,
   CreateFile,
   Wait,
   TypeTextFromFile,
@@ -130,6 +131,23 @@ export const goto = async (instruction: GoTo): Promise<void> => {
 
   const position = new Position(line - 1, column - 1);
   editor.selection = new Selection(position, position);
+  editor.revealRange(
+    editor.selection,
+    TextEditorRevealType.InCenterIfOutsideViewport
+  );
+
+  await timeout(getDelay());
+};
+
+export const select = async (instruction: Select): Promise<void> => {
+  const { line = 1, column = 1 } = instruction;
+  const editor = window.activeTextEditor;
+  if (!editor) {
+    return;
+  }
+
+  const end = new Position(line - 1, column - 1);
+  editor.selection = new Selection(editor.selection.start, end);
   editor.revealRange(
     editor.selection,
     TextEditorRevealType.InCenterIfOutsideViewport

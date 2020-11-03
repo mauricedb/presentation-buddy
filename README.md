@@ -75,13 +75,27 @@ Example:
 
 ### GoTo
 
-Go to a spefic position in the currently open file. The positions are 1 based so they match up with what Visual Studio Code displays. Both the line and column default to 1 if not specified.
+Go to a specific position in the currently open file. The positions are 1 based so they match up with what Visual Studio Code displays. Both the line and column default to 1 if not specified.
 
 Example:
 
 ```JSON
 {
   "type": "goto",
+  "line": 75,
+  "column": 21
+}
+```
+
+### GoTo
+
+Select from the current position to a specific position in the currently open file. The positions are 1 based so they match up with what Visual Studio Code displays. Both the line and column default to 1 if not specified.
+
+Example:
+
+```JSON
+{
+  "type": "select",
   "line": 75,
   "column": 21
 }
