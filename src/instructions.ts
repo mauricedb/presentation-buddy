@@ -23,6 +23,8 @@ export type CreateFile = { type: "createFile"; path: string };
 
 export type GoTo = { type: "goto"; line: number; column: number };
 
+export type Select = { type: "select"; line: number; column: number };
+
 export type Instruction = (
   | Command
   | CreateFile
