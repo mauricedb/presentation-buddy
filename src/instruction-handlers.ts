@@ -25,6 +25,7 @@ import {
   timeout,
   getDelay,
   readFileAsync,
+  getRandomness,
 } from './utils';
 import { setAwaiter } from './wait-for-input';
 
@@ -54,6 +55,8 @@ const typeTextIntoActiveTextEditor = async (
   data: string[],
   delay?: number
 ): Promise<void> => {
+  const delayBetweenChars = delay || getDelay();
+  const randomness = Math.min(delayBetweenChars, getRandomness());
   const editor = window.activeTextEditor;
   if (!editor) {
     return;
@@ -83,7 +86,13 @@ const typeTextIntoActiveTextEditor = async (
     });
 
     char = data.shift();
-    delay === 0 ? void 0 : await timeout(delay || getDelay());
+
+    // give me a random number between -randomness and +randomness
+    const randomDelay =
+      delayBetweenChars +
+      (Math.floor(Math.random() * randomness * 2) - randomness);
+
+    delay === 0 ? void 0 : await timeout(randomDelay);
   }
 };
 

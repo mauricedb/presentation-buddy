@@ -24,6 +24,7 @@ Once Presentation Buddy is initialized and you have updated the instructions you
 This extension contributes the following settings:
 
 - `presentation-buddy.delay`: Delay (in ms) between keys entered. Defaults to 100ms.
+- `presentation-buddy.randomness`: Randomness (in ms) between keys entered. Defaults to 25ms.
 
 ## Instructions
 

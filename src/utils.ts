@@ -79,3 +79,11 @@ export function getDelay() {
 
   return pause || 100;
 }
+
+export function getRandomness() {
+  const pause = workspace
+    .getConfiguration()
+    .get<number>('presentation-buddy.randomness');
+
+  return pause || 0;
+}

@@ -57,6 +57,12 @@
           "default": 100,
           "description": "Delay (in ms) between keys entered",
           "scope": "user"
+        },
+        "presentation-buddy.randomness": {
+          "type": "integer",
+          "default": 25,
+          "description": "Randomness (in ms) between keys entered",
+          "scope": "user"
         }
       }
     }
