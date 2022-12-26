@@ -33,6 +33,8 @@ Note: Any instruction will accept a `"skip": true` settings causing it to be ign
 
 Type some text at the current cursor position of the currently open file. The text setting can either be a string or an array of strings. In the case of an array of strings each string is entered on a new line.
 
+This takes an optional numerical `delay` setting in ms which can be used to override the default delay between keys. This can be useful if you want to speed up or slow down the typing speed for a specific instruction.
+
 Example:
 
 ```JSON
@@ -48,6 +50,8 @@ Example:
 ### TypeTextFromFile
 
 Type some text at the current cursor position of the currently open file. The text is read from the file indicated by the path. The path is relative to the `.presentation-buddy` folder.
+
+This takes an optional numerical `delay` setting which can be used to override the default delay between keys. This can be useful if you want to slow down the typing speed for a specific instruction.
 
 Example:
 
@@ -178,7 +182,8 @@ See `.presentation-buddy\instructions.json`
       "    return x + y;",
       "  }",
       "}"
-    ]
+    ],
+    "delay": 200
   },
   {
     "type": "goto",

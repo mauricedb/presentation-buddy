@@ -13,7 +13,8 @@
       "    return x + y;",
       "  }",
       "}"
-    ]
+    ],
+    "delay": 200
   },
   {
     "type": "goto",
