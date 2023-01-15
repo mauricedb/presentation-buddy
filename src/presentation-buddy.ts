@@ -16,12 +16,18 @@ export const init = async () => {
     join(__dirname, '..', 'examples', 'init', 'instructions.json')
   );
 
+  const schema = await jsonc.read(
+    join(__dirname, '..', 'examples', 'init', 'schema.json')
+  );
+
   const dir = join(workspaceFolder, '.presentation-buddy');
-  const fileName = join(dir, 'instructions.json');
+  const jsonFileName = join(dir, 'instructions.json');
+  const schemaFileName = join(dir, 'schema.json');
 
   await mkdirIfNotExists(dir);
 
-  await jsonc.write(fileName, json, { space: 2 });
+  await jsonc.write(jsonFileName, json, { space: 2 });
+  await jsonc.write(schemaFileName, schema, { space: 2 });
 };
 
 export const start = async () => {
@@ -60,7 +66,8 @@ async function loadInstructions(
     '.presentation-buddy',
     'instructions.json'
   );
-  const instructions: Instruction[] = await jsonc.read(path);
+  const json = await jsonc.read(path);
+  const instructions: Instruction[] = json?.instructions ?? json ?? [];
 
   return instructions.filter((instruction) => !instruction.skip);
 }

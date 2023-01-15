@@ -1,60 +1,64 @@
-[
-  {
-    "type": "createFile",
-    "path": "src/calculator.js"
-  },
-  {
-    "type": "typeText",
-    "text": [
-      "// This code is typed by Presentation Buddy",
-      "",
-      "class Calculator {",
-      "  add(x, y) {",
-      "    return x + y;",
-      "  }",
-      "}"
-    ],
-    "delay": 200
-  },
-  {
-    "type": "goto",
-    "line": 4,
-    "column": 1
-  },
-  {
-    "type": "command",
-    "command": "workbench.action.files.save"
-  },
-  {
-    "type": "command",
-    "command": "workbench.action.closeActiveEditor"
-  },
-  {
-    "type": "createFile",
-    "path": "src/demo.js"
-  },
-  {
-    "type": "typeText",
-    "text": [
-      "// This code is typed by Presentation Buddy",
-      "",
-      "const Calculator = require('./calculator');",
-      "",
-      "const calc = new Calculator();",
-      "const sum = calc.add(1, 2)",
-      "console.log(`The sum of 1 + 2 = ${sum}`);"
-    ]
-  },
-  {
-    "type": "openFile",
-    "path": "src/calculator.js"
-  },
-  {
-    "type": "command",
-    "command": "cursorBottom"
-  },
-  {
-    "type": "typeText",
-    "text": ["", "module.exports = Calculator;"]
-  }
-]
+{
+  "$schema": "./schema.json",
+  "instructions": [
+    {
+      "type": "createFile",
+      "path": "src/calculator.js"
+    },
+    {
+      "type": "typeText",
+
+      "text": [
+        "// This code is typed by Presentation Buddy",
+        "",
+        "class Calculator {",
+        "  add(x, y) {",
+        "    return x + y;",
+        "  }",
+        "}"
+      ],
+      "delay": 200
+    },
+    {
+      "type": "goto",
+      "line": 4,
+      "column": 1
+    },
+    {
+      "type": "command",
+      "command": "workbench.action.files.save"
+    },
+    {
+      "type": "command",
+      "command": "workbench.action.closeActiveEditor"
+    },
+    {
+      "type": "createFile",
+      "path": "src/demo.js"
+    },
+    {
+      "type": "typeText",
+      "text": [
+        "// This code is typed by Presentation Buddy",
+        "",
+        "const Calculator = require('./calculator');",
+        "",
+        "const calc = new Calculator();",
+        "const sum = calc.add(1, 2)",
+        "console.log(`The sum of 1 + 2 = ${sum}`);"
+      ]
+    },
+    {
+      "type": "openFile",
+      "path": "src/calculator.js"
+    },
+    {
+      "type": "command",
+      "command": "cursorBottom"
+    },
+    {
+      "type": "typeText",
+      "text": ["", "module.exports = Calculator;"]
+    }
+  ]
+}
