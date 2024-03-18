@@ -17,6 +17,15 @@ export type TypeTextFromFile = {
   delay?: number;
 };
 
+export type TypeChunksFromFile = {
+  type: "typeChunksFromFile";
+  path: string;
+  delay?: number;
+  waitInsteadOf: string[];
+  waitAfter: string[];
+  skipChunksContaining: string[];
+};
+
 export type OpenFile = { type: "openFile"; path: string };
 
 export type CreateFile = { type: "createFile"; path: string };
@@ -31,6 +40,7 @@ export type Instruction = (
   | OpenFile
   | TypeText
   | TypeTextFromFile
+  | TypeChunksFromFile
   | Wait
 ) &
   Skipable;

@@ -18,6 +18,7 @@ import {
   CreateFile,
   Wait,
   TypeTextFromFile,
+  TypeChunksFromFile
 } from './instructions';
 import {
   mkdirIfNotExists,
@@ -44,6 +45,50 @@ export const typeTextFromFile = async (
 
   await typeTextIntoActiveTextEditor(data, instruction.delay);
 };
+
+export const typeChunksFromFile = async (
+  instruction: TypeChunksFromFile
+): Promise<void> => {
+  if (!workspace.workspaceFolders) {
+    return;
+  }
+
+  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+  const path = join(workspaceFolder, '.presentation-buddy', instruction.path);
+  const text = await readFileAsync(path);
+  const waitInsteadOf = instruction.waitInsteadOf || ["/*WAIT*/"];
+  const waitAfter = instruction.waitAfter || ["\n" ]
+  const skipChunksContaining = instruction.skipChunksContaining || ["/*SKIP*/"];
+  var chunks = [ text ];
+  for(var token of waitAfter) {
+    chunks = chunks
+      .map(chunk => chunk.split(token).map(chunk => chunk ? chunk : token))
+      .flat();
+  }
+  for(var token of waitInsteadOf) {
+    chunks = chunks
+      .map(chunk => chunk.split(token))
+      .flat();
+  }
+
+  function keep(chunk: string): boolean { return !skipChunksContaining.some(t => chunk.includes(t)) };
+
+  chunks = chunks.filter(chunk => keep(chunk));
+
+  for (const chunk of chunks) {
+    await typeTextIntoActiveTextEditor(Array.from(chunk), instruction.delay);
+    if (chunk.endsWith('\n')) await command({
+      type: "command",
+      command: "cursorHome",
+      args: [],
+      repeat: 1
+    });
+    await wait({
+      delay: "manual",
+      type: 'wait'
+    });
+  }
+}
 
 export const typeText = async (instruction: TypeText): Promise<void> => {
   const data = Array.from(instruction.text.join('\n'));

@@ -35,6 +35,18 @@ const mkdirAsync = async (path: string): Promise<void> => {
   }
 };
 
+export function multiSplit(text: string, tokens: string[]): string[] {
+  if (tokens.length) {
+    tokens.sort((a, b) => b.length - a.length);
+    let token = tokens[0];
+    for (var i = 1; i < tokens.length; i++) {
+      text = text.split(tokens[i]).join(token);
+    }
+    return text.split(token);
+  }
+  return [text];
+}
+
 export async function mkdirIfNotExists(dir: string) {
   const parts = dir.split(/[\/\\]/);
 
