@@ -23,7 +23,7 @@ export type TypeChunksFromFile = {
   delay?: number;
   waitInsteadOf: string[];
   waitAfter: string[];
-  skipChunksContaining: string[];
+  skipLinesContaining: string[];
 };
 
 export type OpenFile = { type: "openFile"; path: string };

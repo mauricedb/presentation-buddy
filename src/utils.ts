@@ -34,17 +34,40 @@ const mkdirAsync = async (path: string): Promise<void> => {
     console.log(err);
   }
 };
-
-export function multiSplit(text: string, tokens: string[]): string[] {
-  if (tokens.length) {
-    tokens.sort((a, b) => b.length - a.length);
-    let token = tokens[0];
-    for (var i = 1; i < tokens.length; i++) {
-      text = text.split(tokens[i]).join(token);
+export function* splat(text: string, token: string) {
+  let i = 0;
+  let candidate = "";
+  while (i++ < text.length) {
+    candidate = text.substring(0, i);
+    if (candidate.endsWith(token)) {
+      yield candidate;
+      candidate = "";
+      text = text.substring(i);
+      i = 0;
     }
-    return text.split(token);
   }
-  return [text];
+  if (candidate) { yield candidate };
+}
+export function readChunks(
+  text: string,
+  consumeTokens: string[] = [],
+  preserveTokens: string[] = [],
+  skipTokens: string[] = []
+): string[] {
+
+  let result = [ text
+    .split(/\r?\n/)
+    .filter(line => !skipTokens.some(skip => line.includes(skip)))
+    .join('\n') ];
+
+  for (var token of consumeTokens) {
+    result = result.map(r => r.split(token)).flat();
+  }
+  for (var token of preserveTokens) {
+    result = result.map(r => [...splat(r, token)]).flat();
+  }
+  let keep = (s: string) => (s !== "" && (!skipTokens.some(t => s.includes(t))));
+  return result.filter(t => keep(t));
 }
 
 export async function mkdirIfNotExists(dir: string) {
@@ -99,3 +122,4 @@ export function getRandomness() {
 
   return pause || 0;
 }
+
