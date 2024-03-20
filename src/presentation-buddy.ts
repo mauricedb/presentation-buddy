@@ -4,7 +4,7 @@ import { jsonc } from 'jsonc';
 
 import { Instruction, InstructionHandler } from './instructions';
 import * as instructionHandlers from './instruction-handlers';
-import { mkdirIfNotExists } from './utils';
+import { existsAsync, mkdirIfNotExists } from './utils';
 
 export const init = async () => {
   if (!workspace.workspaceFolders) {
@@ -18,17 +18,21 @@ export const init = async () => {
 
   const dir = join(workspaceFolder, '.presentation-buddy');
   const fileName = join(dir, 'instructions.json');
-
-  await mkdirIfNotExists(dir);
-
-  await jsonc.write(fileName, json, { space: 2 });
+  if (await existsAsync(fileName)) {
+    window.showWarningMessage(
+      `File ${fileName} exists: overwrite it?`, "Yes", "No"
+    ).then(async answer => {
+      if (answer === "Yes") {
+        await jsonc.write(fileName, json, { space: 2 });
+       };
+    });
+  } else {
+    await mkdirIfNotExists(dir);
+    await jsonc.write(fileName, json, { space: 2 });
+  }
 };
 
 export const start = async () => {
-  // const editor = window.activeTextEditor;
-  // if (!editor) {
-  //   return;
-  // }
   if (!workspace.workspaceFolders) {
     return;
   }

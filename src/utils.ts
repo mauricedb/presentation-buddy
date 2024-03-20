@@ -16,7 +16,7 @@ const pathToUri = (path: string): Uri => {
   throw new Error('No window.activeTextEditor.document.uri?');
 };
 
-const existsAsync = async (path: string): Promise<boolean> => {
+export const existsAsync = async (path: string): Promise<boolean> => {
   try {
     const uri = pathToUri(path);
     await workspace.fs.stat(uri);
@@ -46,8 +46,22 @@ export function* splat(text: string, token: string) {
       i = 0;
     }
   }
-  if (candidate) { yield candidate };
+  if (candidate) { yield candidate; };
 }
+
+export function* crunch(chunks: string[], tokens: string[]) {
+  var result = '';
+  for (var chunk of chunks) {
+    if (tokens.includes(chunk) || /^\s+$/.test(chunk)) {
+      result += chunk;
+    } else {
+      if (result !== '') { yield result; };
+      result = chunk;
+    }
+  }
+  if (result !== '') { yield result; }
+}
+
 export function readChunks(
   text: string,
   consumeTokens: string[] = [],
@@ -55,19 +69,24 @@ export function readChunks(
   skipTokens: string[] = []
 ): string[] {
 
-  let result = [ text
+  let result = [text
     .split(/\r?\n/)
     .filter(line => !skipTokens.some(skip => line.includes(skip)))
-    .join('\n') ];
+    .join('\n')];
 
   for (var token of consumeTokens) {
     result = result.map(r => r.split(token)).flat();
   }
+
   for (var token of preserveTokens) {
     result = result.map(r => [...splat(r, token)]).flat();
   }
+
   let keep = (s: string) => (s !== "" && (!skipTokens.some(t => s.includes(t))));
-  return result.filter(t => keep(t));
+
+  result = result.filter(t => keep(t));
+  result = [...crunch(result, preserveTokens)];
+  return result;
 }
 
 export async function mkdirIfNotExists(dir: string) {
@@ -123,3 +142,18 @@ export function getRandomness() {
   return pause || 0;
 }
 
+export function getWaitAfterNewLine() : boolean {
+  const waitAfterNewLine = workspace.getConfiguration().get<boolean>('presentation-buddy.waitAfterNewLine');
+  return waitAfterNewLine ?? true;
+}
+
+function getConfigValues(key: string) {
+  const values = workspace
+    .getConfiguration()
+    .get<string[]>(`presentation-buddy.${key}`);
+  return values || [];
+}
+
+export const getWaitInsteadOfTyping = () => getConfigValues('waitInsteadOfTyping');
+export const getWaitAfterTyping = () => getConfigValues('waitAfterTyping');
+export const getSkipLinesContaining = () => getConfigValues('skipLinesContaining');

@@ -1,5 +1,9 @@
 type Skipable = { skip?: boolean };
 
+export interface IHaveAFilePath {
+  path: string;
+}
+
 export type Command = {
   type: "command";
   command: string;
@@ -21,8 +25,9 @@ export type TypeChunksFromFile = {
   type: "typeChunksFromFile";
   path: string;
   delay?: number;
-  waitInsteadOf: string[];
-  waitAfter: string[];
+  waitInsteadOfTyping: string[];
+  waitAfterTyping: string[];
+  waitAfterNewLine: boolean | null,
   skipLinesContaining: string[];
 };
 

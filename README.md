@@ -25,6 +25,10 @@ This extension contributes the following settings:
 
 - `presentation-buddy.delay`: Delay (in ms) between keys entered. Defaults to 100ms.
 - `presentation-buddy.randomness`: Randomness (in ms) between keys entered. Defaults to 25ms.
+- `presentation-buddy.waitInsteadOfTyping`: Default array of strings which indicate a pause when typing chunks from a file. 
+- `presentation-buddy.waitAfterTyping`: Default array of strings which indicate a pause when typing chunks from a file.
+- `presentation-buddy.skipLinesContaining`: Default array of strings indicating lines to skip when typing chunks from a file.
+- `presentation-buddy.waitAfterNewLine`: controls whether to pause after each new line when typing chunks from a file.
 
 ## Instructions
 
@@ -60,6 +64,45 @@ Example:
 {
   "type": "typeTextFromFile",
   "path": "./text-source.js"
+}
+```
+
+### TypeChunksFromFile
+
+Type text at the current cursor position of the currently open file. Text is read from the file indicated by the path, relative to the `.presentation-buddy` folder. The input file will be split into chunks based on the supplied settings. 
+
+By default, the input will be split on newlines (`\n`). Windows-style `\r\n` line endings will be converted to `\n` before the file is processed. To disable this, set `waitAfterNewLines` to `false`.
+
+Presentation Buddy will:
+
+* `wait` after typing any string matching a supplied `waitAfter` argument
+* `wait` **instead of** typing any string matching a supplied `waitInsteadOf` argument
+* Skip any line containing any string matching a supplied `skipLinesContaining` argument
+
+Example:
+
+```json
+{
+  "type":"typeChunksFromFile",
+  "path": "chunks-example.js",
+  "waitAfterTyping": [ "{", ".", " => ", " = " ],
+  "waitInsteadOfTyping": [ "/*WAIT*/" ],
+  "skipLinesContaining": [ "//skip" ]
+}
+```
+
+The input file `chunks-example.js`:
+
+```js
+import { Color } from './color.js'; //skip 
+//skip
+export class Scene {
+    constructor(camera, background, shapes) {
+        this.camera = camera;
+        this.background = background /*WAIT*/ ?? Color.Black;
+        this.shapes = shapes ?? [];
+    }
+    trace = (x, y) => this.camera.trace(this, x, y);
 }
 ```
 

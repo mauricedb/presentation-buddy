@@ -18,7 +18,8 @@ import {
   CreateFile,
   Wait,
   TypeTextFromFile,
-  TypeChunksFromFile
+  TypeChunksFromFile,
+  IHaveAFilePath
 } from './instructions';
 import {
   mkdirIfNotExists,
@@ -27,21 +28,31 @@ import {
   getDelay,
   readFileAsync,
   getRandomness,
-  readChunks
+  readChunks,
+  getWaitAfterTyping,
+  getWaitInsteadOfTyping,
+  getSkipLinesContaining,
+  getWaitAfterNewLine
 } from './utils';
 import { setAwaiter } from './wait-for-input';
+
+const readFileContents = async (
+  instruction: IHaveAFilePath
+) : Promise<string> => {
+  if (!workspace.workspaceFolders) {
+    return "";
+  }
+  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+  const path = join(workspaceFolder, '.presentation-buddy', instruction.path);
+  return await readFileAsync(path);
+};
 
 export const typeTextFromFile = async (
   instruction: TypeTextFromFile
 ): Promise<void> => {
-  if (!workspace.workspaceFolders) {
-    return;
-  }
 
-  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
-  const path = join(workspaceFolder, '.presentation-buddy', instruction.path);
-
-  const text = await readFileAsync(path);
+  const text = await readFileContents(instruction);
+  if (text === '') { return; }
   const data = Array.from(text.split('\r\n').join('\n'));
 
   await typeTextIntoActiveTextEditor(data, instruction.delay);
@@ -50,17 +61,18 @@ export const typeTextFromFile = async (
 export const typeChunksFromFile = async (
   instruction: TypeChunksFromFile
 ): Promise<void> => {
-  if (!workspace.workspaceFolders) {
-    return;
-  }
 
-  const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
-  const path = join(workspaceFolder, '.presentation-buddy', instruction.path);
-  const text = await readFileAsync(path);
-  const consumeTokens = instruction.waitInsteadOf || ["/*WAIT*/"];
-  const preserveTokens = instruction.waitAfter || ["\n"];
-  const skipTokens = instruction.skipLinesContaining || ["/*SKIP*/"];
-  var chunks = readChunks(text, consumeTokens, preserveTokens, skipTokens);
+  const text = await readFileContents(instruction);
+  if (text === '') { return; }
+
+  const waitInsteadOf = instruction.waitInsteadOfTyping || getWaitInsteadOfTyping();
+  const waitAfter = instruction.waitAfterTyping ||  getWaitAfterTyping();
+  const skipLinesContaining = instruction.skipLinesContaining ||  getSkipLinesContaining();
+  const waitAfterNewLine = instruction.waitAfterNewLine ?? getWaitAfterNewLine() ?? true;
+
+  if (waitAfterNewLine) { waitAfter.push('\n'); }
+
+  var chunks = readChunks(text, waitInsteadOf, waitAfter, skipLinesContaining);
   for (const chunk of chunks) {
     await typeTextIntoActiveTextEditor(Array.from(chunk), instruction.delay);
     if (chunk.endsWith('\n')) {

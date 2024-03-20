@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { splat, readChunks } from '../utils';
+import { crunch, readChunks } from '../utils';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -59,7 +59,7 @@ h,i,j
     preserveTokens: [ "\n" ],
     consumeTokens: [","],
     skipTokens: ["SKIP"],
-    expected: ["a", "b\n", "c\n", "h", "i", "j\n", "\n"]
+    expected: ["a", "b\n", "c\n", "h", "i", "j\n\n"]
   },
   {
     ...empty,
@@ -78,16 +78,46 @@ var z = 25;
       "Console.ReadLine(", ");\n",
       "Console.WriteLine(", "x + y);\n",
       "var z = ",
-      "25;\n",
-      "\n"
+      "25;\n\n"
     ]
   },
+  {
+    ...empty,
+    text: "foo\n\n\nbar",
+    preserveTokens: [ "\n" ],
+    expected: [ "foo\n\n\n", "bar" ]
+  },
+  {
+    ...empty,
+    text: `main() {
+
+    printf('hello!');
+
+}`,
+    preserveTokens: [ "{", "\n" ],
+    expected: [ "main() {\n\n", "    printf('hello!');\n\n", "}" ]
+  }
 ];
+
 suite('Chunk parsing tests', () => {
   inputs.forEach((input) => {
     test(`${input.text} / ${input.consumeTokens} / ${input.preserveTokens} / ${input.skipTokens}`, () => {
       let chunks = readChunks(input.text, input.consumeTokens, input.preserveTokens, input.skipTokens);
       assert.deepEqual(chunks, input.expected);
+    });
+  });
+});
+
+let crunchTestCases = [
+  [ ["a", "a", "a" ], ["a"], [ "aaa"] ],
+  [ [ "b", "a", "e", "n", "a", "e", "n", "a", "e" ], ["a", "e"], ["bae", "nae", "nae"] ],
+  [ [ "b", "a", " ", "e", "n", "a", " ", "e", "n", "\t", "a", "\t", "e" ], ["a", "e"], ["ba e", "na e", "n\ta\te"] ]
+];
+suite('Crunch tests', () => {
+  crunchTestCases.forEach(([chunks,tokens,expected]) => {
+    test(`crunch(${chunks} / ${tokens}) == ${expected}`, () => {
+      var result = [...crunch(chunks,tokens)];
+      assert.deepEqual(result, expected);
     });
   });
 });
