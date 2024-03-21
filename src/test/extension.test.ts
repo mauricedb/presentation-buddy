@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { crunch, readChunks } from '../utils';
+import { gatherSeparators, splitTextIntoChunks } from '../utils';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -102,21 +102,23 @@ var z = 25;
 suite('Chunk parsing tests', () => {
   inputs.forEach((input) => {
     test(`${input.text} / ${input.consumeTokens} / ${input.preserveTokens} / ${input.skipTokens}`, () => {
-      let chunks = readChunks(input.text, input.consumeTokens, input.preserveTokens, input.skipTokens);
+      let chunks = splitTextIntoChunks(input.text, input.consumeTokens, input.preserveTokens, input.skipTokens);
       assert.deepEqual(chunks, input.expected);
     });
   });
 });
 
-let crunchTestCases = [
+let gatherTestCases = [
   [ ["a", "a", "a" ], ["a"], [ "aaa"] ],
   [ [ "b", "a", "e", "n", "a", "e", "n", "a", "e" ], ["a", "e"], ["bae", "nae", "nae"] ],
-  [ [ "b", "a", " ", "e", "n", "a", " ", "e", "n", "\t", "a", "\t", "e" ], ["a", "e"], ["ba e", "na e", "n\ta\te"] ]
+  [ [ "b", "a", " ", "e", "n", "a", " ", "e", "n", "\t", "a", "\t", "e" ], ["a", "e"], ["ba e", "na e", "n\ta\te"] ],
+  [ [ "a!", "?", "!", "b?!", "?", "!", "c", "?"], [ "!", "?" ], [ "a!?!", "b?!?!", "c?"] ],
+  [ [ "a!", " ", "\t", "!", "b"], [ "!" ], [ "a! \t!", "b" ] ]
 ];
-suite('Crunch tests', () => {
-  crunchTestCases.forEach(([chunks,tokens,expected]) => {
-    test(`crunch(${chunks} / ${tokens}) == ${expected}`, () => {
-      var result = [...crunch(chunks,tokens)];
+suite('Gather Separators Tests', () => {
+  gatherTestCases.forEach(([elements,separators,expected]) => {
+    test(`gatherSeparators(${elements} / ${separators}) == ${expected}`, () => {
+      var result = [...gatherSeparators(elements,separators)];
       assert.deepEqual(result, expected);
     });
   });

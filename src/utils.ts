@@ -34,12 +34,19 @@ const mkdirAsync = async (path: string): Promise<void> => {
     console.log(err);
   }
 };
-export function* splat(text: string, token: string) {
+
+/** Split a string after each instance of the supplied separator,
+ * and include the the separator in the resulting tokens.
+ * @example
+ * // returns ['ba','na','na']
+ * splitAfterToken('banana', 'a')
+ */
+export function* splitAfterToken(text: string, separator: string) {
   let i = 0;
   let candidate = "";
   while (i++ < text.length) {
     candidate = text.substring(0, i);
-    if (candidate.endsWith(token)) {
+    if (candidate.endsWith(separator)) {
       yield candidate;
       candidate = "";
       text = text.substring(i);
@@ -49,23 +56,37 @@ export function* splat(text: string, token: string) {
   if (candidate) { yield candidate; };
 }
 
-export function* crunch(chunks: string[], tokens: string[]) {
+/** Return a new array in which any consecutive sequence of
+ * separators or elements containing only whitespace is concatenated
+ * into a single string and appended to the preceding element.
+ * @example returns ['a!!', 'b!?', 'c?!' ]
+ * crunch(['a','!','!','b','!','?', 'c?', '!'], ['!','?'])
+  */
+export function* gatherSeparators(elements: string[], separators: string[]) {
   var result = '';
-  for (var chunk of chunks) {
-    if (tokens.includes(chunk) || /^\s+$/.test(chunk)) {
-      result += chunk;
+  for (var element of elements) {
+    if (separators.includes(element) || /^\s+$/.test(element)) {
+      result += element;
     } else {
       if (result !== '') { yield result; };
-      result = chunk;
+      result = element;
     }
   }
   if (result !== '') { yield result; }
 }
 
-export function readChunks(
+/** Split the supplied text into chunks based on the specified
+ * separators.
+ * @param {string} text - The input text, typically a block of program code
+ * @param {string[]} separatorsToConsume - Separators which should be removed from the output
+ * @param {string[]} separatorsToInclude - Separators which should be included in the output
+ * @param {String[]} skipTokens - tokens indicating that an entire line should be omitted from the output.
+  */
+
+export function splitTextIntoChunks(
   text: string,
-  consumeTokens: string[] = [],
-  preserveTokens: string[] = [],
+  separatorsToConsume: string[] = [],
+  separatorsToInclude: string[] = [],
   skipTokens: string[] = []
 ): string[] {
 
@@ -74,18 +95,18 @@ export function readChunks(
     .filter(line => !skipTokens.some(skip => line.includes(skip)))
     .join('\n')];
 
-  for (var token of consumeTokens) {
-    result = result.map(r => r.split(token)).flat();
+  for (var separator of separatorsToConsume) {
+    result = result.map(r => r.split(separator)).flat();
   }
 
-  for (var token of preserveTokens) {
-    result = result.map(r => [...splat(r, token)]).flat();
+  for (var separator of separatorsToInclude) {
+    result = result.map(r => [...splitAfterToken(r, separator)]).flat();
   }
 
   let keep = (s: string) => (s !== "" && (!skipTokens.some(t => s.includes(t))));
 
   result = result.filter(t => keep(t));
-  result = [...crunch(result, preserveTokens)];
+  result = [...gatherSeparators(result, separatorsToInclude)];
   return result;
 }
 
