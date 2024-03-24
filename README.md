@@ -25,6 +25,10 @@ This extension contributes the following settings:
 
 - `presentation-buddy.delay`: Delay (in ms) between keys entered. Defaults to 100ms.
 - `presentation-buddy.randomness`: Randomness (in ms) between keys entered. Defaults to 25ms.
+- `presentation-buddy.waitInsteadOfTyping`: Default array of strings which indicate a pause when typing chunks from a file. 
+- `presentation-buddy.waitAfterTyping`: Default array of strings which indicate a pause when typing chunks from a file.
+- `presentation-buddy.skipLinesContaining`: Default array of strings indicating lines to skip when typing chunks from a file.
+- `presentation-buddy.waitAfterNewLine`: controls whether to pause after each new line when typing chunks from a file.
 
 ## Instructions
 
@@ -60,6 +64,51 @@ Example:
 {
   "type": "typeTextFromFile",
   "path": "./text-source.js"
+}
+```
+
+### TypeChunksFromFile
+
+Type text at the current cursor position of the currently open file. Text is read from the file indicated by the path, relative to the `.presentation-buddy` folder. The input file will be split into chunks based on the supplied settings. 
+
+By default, the input will be split on newlines (`\n`). To disable this, set `waitAfterNewLines` to `false`.
+
+Windows-style `\r\n` line endings will be converted to `\n` before the file is processed.
+
+Presentation Buddy will:
+
+* `wait` after typing any string matching a supplied `waitAfter` argument
+* `wait` **instead of** typing any string matching a supplied `waitInsteadOf` argument
+* Skip any line containing any string matching a supplied `skipLinesContaining` argument.
+
+#### Example:
+
+This will type the contents of `chunks-exampe.js` into the current window, one line at a time.
+
+Any line containing the comment `//skip` will be skipped. Presentation Buddy will pause after typing an opening curly bracket `{`, a dot `.`, a lambda function symbol `  =>  `, or an assignment `  =  `. If the input contains the string `/*WAIT*/`, this will pause Presentation Buddy but the `/*WAIT*/` won't be copied to the output.
+
+```json
+{
+  "type":"typeChunksFromFile",
+  "path": "chunks-example.js",
+  "waitAfterTyping": [ "{", ".", " => ", " = " ],
+  "waitInsteadOfTyping": [ "/*WAIT*/" ],
+  "skipLinesContaining": [ "//skip" ]
+}
+```
+
+The input file `chunks-example.js`:
+
+```js
+import { Color } from './color.js'; //skip 
+//skip
+export class Scene {
+    constructor(camera, background, shapes) {
+        this.camera = camera;
+        this.background = background /*WAIT*/ ?? Color.Black;
+        this.shapes = shapes ?? [];
+    }
+    trace = (x, y) => this.camera.trace(this, x, y);
 }
 ```
 
@@ -108,7 +157,7 @@ Example:
 
 ### Command
 
-Executes one of the standard Visual Studio Code commands. The command should be one of the standard Visual Studio Code command names. See the Keyboard shortcuts for the known commands. When the command requires additional parameters an **args** array or primitive types can be passed along. Add an optional `repeat` settings if a command needs to be execured multiple times.
+Executes one of the standard Visual Studio Code commands. The command should be one of the standard Visual Studio Code command names. See the Keyboard shortcuts for the known commands. When the command requires additional parameters an **args** array or primitive types can be passed along. Add an optional `repeat` settings if a command needs to be executed multiple times.
 
 Note: Not all commands might work as expected so your mileage may vary.
 
@@ -233,9 +282,3 @@ See `.presentation-buddy\instructions.json`
 ## Known Issues
 
 This is still in the experimental preview stage. Use at your own risk.
-
-## Release Notes
-
-### 1.0.0
-
-- ToDo

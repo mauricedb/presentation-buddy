@@ -28,11 +28,6 @@
     "color": "#193549",
     "theme": "dark"
   },
-  "activationEvents": [
-    "onCommand:presentationBuddy.init",
-    "onCommand:presentationBuddy.start",
-    "onCommand:presentationBuddy.continue"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -50,7 +45,7 @@
       }
     ],
     "configuration": {
-      "title": "Presentation Buddy configuration",
+      "title": "Presentation Buddy",
       "properties": {
         "presentation-buddy.delay": {
           "type": "integer",
@@ -62,6 +57,39 @@
           "type": "integer",
           "default": 25,
           "description": "Randomness (in ms) between keys entered",
+          "scope": "user"
+        },
+        "presentation-buddy.waitInsteadOfTyping": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [ "/*WAIT*/" ],
+          "description": "When using typeChunksFromFile, Presentation Buddy will pause when it finds any matching string. Matches are NOT copied to the output.",
+          "scope": "user"
+        },
+        "presentation-buddy.waitAfterNewLine": {
+          "type": "boolean",
+          "default": true,
+          "description": "When using typeChunksFromFile, controls whether Presentation Buddy should pause at the start of each new line.",
+          "scope": "user"
+        },
+        "presentation-buddy.waitAfterTyping": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [ "(", "=" ],
+          "description": "When using typeChunksFromFile, Presentation Buddy will pause after typing any series of matching strings.",
+          "scope": "user"
+        },
+        "presentation-buddy.skipLinesContaining": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [ "/*SKIP*/" ],
+          "description": "When using typeChunksFromFile, Presentation Buddy will skip any line containing any matching string.",
           "scope": "user"
         }
       }
