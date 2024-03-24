@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
         await init();
         vscode.window.showInformationMessage('Presentation Buddy: Init');
       } catch (e) {
-        vscode.window.showErrorMessage(e.message);
+        vscode.window.showErrorMessage((e as Error).message);
       }
     })
   );
@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await start();
       } catch (e) {
-        vscode.window.showErrorMessage(e.message);
+        vscode.window.showErrorMessage((e as Error).message);
       }
     })
   );
