@@ -85,7 +85,7 @@ Presentation Buddy will:
 
 This will type the contents of `chunks-exampe.js` into the current window, one line at a time.
 
-Any line containing the comment `//skip` will be skipped. Presentation Buddy will pause after typing an opening curly bracket `{`, a dot `'`, a lambda function symbol `  =>  `, or an assignment `  =  `. If the input contains the string `/*WAIT*/`, this will pause Presentation Buddy but the `/*WAIT*/` won't be copied to the output.
+Any line containing the comment `//skip` will be skipped. Presentation Buddy will pause after typing an opening curly bracket `{`, a dot `.`, a lambda function symbol `  =>  `, or an assignment `  =  `. If the input contains the string `/*WAIT*/`, this will pause Presentation Buddy but the `/*WAIT*/` won't be copied to the output.
 
 ```json
 {
