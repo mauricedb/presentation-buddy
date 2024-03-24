@@ -28,6 +28,7 @@
     "color": "#193549",
     "theme": "dark"
   },
+  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -64,7 +65,9 @@
           "items": {
             "type": "string"
           },
-          "default": [ "/*WAIT*/" ],
+          "default": [
+            "/*WAIT*/"
+          ],
           "description": "When using typeChunksFromFile, Presentation Buddy will pause when it finds any matching string. Matches are NOT copied to the output.",
           "scope": "user"
         },
@@ -79,7 +82,10 @@
           "items": {
             "type": "string"
           },
-          "default": [ "(", "=" ],
+          "default": [
+            "(",
+            "="
+          ],
           "description": "When using typeChunksFromFile, Presentation Buddy will pause after typing any series of matching strings.",
           "scope": "user"
         },
@@ -88,7 +94,9 @@
           "items": {
             "type": "string"
           },
-          "default": [ "/*SKIP*/" ],
+          "default": [
+            "/*SKIP*/"
+          ],
           "description": "When using typeChunksFromFile, Presentation Buddy will skip any line containing any matching string.",
           "scope": "user"
         }
