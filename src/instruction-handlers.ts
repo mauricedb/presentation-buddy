@@ -83,9 +83,17 @@ export const typeChunksFromFile = async (
 };
 
 export const typeText = async (instruction: TypeText): Promise<void> => {
-  const data = Array.from(instruction.text.join('\n'));
+  try {
+    const data:string[] = (Array.isArray(instruction.text)
+    ? Array.from(instruction.text.join('\n'))
+    : Array.from([instruction.text].join('\n')));
 
-  await typeTextIntoActiveTextEditor(data, instruction.delay);
+    await typeTextIntoActiveTextEditor(data, instruction.delay);
+
+  }
+  catch(error:any) {
+    window.showErrorMessage(`Error on typeText command: ${error.message}`);
+  }
 };
 
 const typeTextIntoActiveTextEditor = async (
